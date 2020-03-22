@@ -2,7 +2,7 @@ import React from 'react';
 
 function Square(props) {
     return (
-      <button className="square" onClick={() => props.onClick()}>
+      <button className={"square " + props.highlight} onClick={() => props.onClick()}>
         {props.value}
       </button>
     );
@@ -14,6 +14,7 @@ function Square(props) {
       return <Square 
           value={this.props.squares[i]} 
           onClick={() => this.props.onClick(i)}
+          highlight={this.props.winnerLine && this.props.winnerLine.includes(i) ? 'highlight' : ''}
         />;
     }
   
