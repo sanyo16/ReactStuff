@@ -18,4 +18,8 @@ function calculateWinner(squares) {
     return null;
   }
 
-  export default calculateWinner;
+  function getPosition(i) {
+    return {x: Math.floor(i / 3) + 1 , y: i % 3 + 1}
+  }
+
+  export {calculateWinner, getPosition};

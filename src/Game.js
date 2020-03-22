@@ -1,6 +1,7 @@
 import React from 'react';
 import Board  from './Board';
-import calculateWinner from './Helper';
+import {calculateWinner, getPosition} from './Helper';
+
 
 class Game extends React.Component {
 
@@ -11,7 +12,8 @@ class Game extends React.Component {
           squares: Array(9).fill(null),
         }],
         xIsNext: true,
-        stepNumber: 0
+        stepNumber: 0,
+        positions: []       
       };
     }
   
@@ -19,6 +21,8 @@ class Game extends React.Component {
       const history = this.state.history.slice(0,  this.state.stepNumber + 1);
       const current = history[history.length - 1];
       const squares = current.squares.slice();
+
+      const positions = this.state.positions.slice();
   
       if (calculateWinner(squares) || squares[i]) {
         return;
@@ -30,14 +34,15 @@ class Game extends React.Component {
             squares: squares,
           }]),
           xIsNext: !this.state.xIsNext,
-          stepNumber: history.length
+          stepNumber: history.length,
+          positions: positions.concat(getPosition(i))
         });
     }
   
     jumpTo(move) {
         this.setState({
             stepNumber: move,
-            xIsNext: (move % 2) === 0,
+            xIsNext: (move % 2) === 0,            
         })
     }
   
@@ -55,11 +60,11 @@ class Game extends React.Component {
   
       const moves = history.map((step, move) => {
         const desc = move ? 
-          'Go to move #' + move :
+          `Go to move # (${this.state.positions[move-1].x} , ${this.state.positions[move-1].y})` :
           'Go to game start';
   
         return (
-            <li key={move}>
+            <li key={move} className={this.state.stepNumber === move ? 'active' : ''}>
                 <button onClick={()=>this.jumpTo(move)}>{desc}</button>
             </li>
         )
