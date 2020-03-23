@@ -14,11 +14,11 @@ function Square(props) {
       return <Square 
           value={this.props.squares[i]} 
           onClick={() => this.props.onClick(i)}
-          highlight={this.props.winnerLine && this  .props.winnerLine.includes(i) ? 'highlight' : ''}
+          highlight={this.props.winnerLine && this.props.winnerLine.includes(i) ? 'highlight' : ''}
         />;
     }
 
-    createBoard = () => {//
+    createBoard = () => {
       let board = []
       for (let i = 0; i < 3; i++) {
         let squares = []        
