@@ -18,7 +18,7 @@ function Square(props) {
         />;
     }
 
-    createBoard = () => {
+    createBoard = () => {///
       let board = []
       for (let i = 0; i < 3; i++) {
         let squares = []        
