@@ -18,7 +18,13 @@ function calculateWinner(squares) {
     return null;
   }
 
-  function getPosition(i) {
+  function getPosition(previous, current) {
+
+    let i = 0;
+    for (i = 0; i < 9; i++) {
+      if (previous[i] === null && current[i] !== null)
+        break;
+    }
     return {x: Math.floor(i / 3) + 1 , y: i % 3 + 1}
   }
 

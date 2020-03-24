@@ -10,19 +10,18 @@ class Game extends React.Component {
       this.state = {
         history: [{
           squares: Array(9).fill(null),
+          position:  {x : 0, y : 0},
+          isSelected: false 
         }],
         xIsNext: true,
-        stepNumber: 0,
-        positions: []       
+        stepNumber: 0
       };
     }
   
     handleClick(i) {
       const history = this.state.history.slice(0,  this.state.stepNumber + 1);
-      const current = history[history.length - 1];
+      const current = history[history.length - 1];   
       const squares = current.squares.slice();
-
-      const positions = this.state.positions.slice();
   
       if (calculateWinner(squares) || squares[i]) {
         return;
@@ -32,23 +31,38 @@ class Game extends React.Component {
         {
           history: history.concat([{
             squares: squares,
+            position: getPosition(current.squares, squares)
           }]),
           xIsNext: !this.state.xIsNext,
-          stepNumber: history.length,
-          positions: positions.concat(getPosition(i))
+          stepNumber: history.length
         });
     }
   
     jumpTo(move) {
+        const history = this.state.history.slice(0, this.state.history.length);
+        history.map(hist => hist.isSelected = false);
+        history[move].isSelected = true;
+
         this.setState({
+            history: history,
             stepNumber: move,
             xIsNext: (move % 2) === 0,            
         })
     }
   
+    sortMoves() {
+      const history = this.state.history.slice(0,  this.state.history.length);
+      this.setState(
+        {         
+          history: history.reverse()
+        }
+      );
+    }
+
     render() {
       const history = this.state.history;
-      const current = history[this.state.stepNumber];
+      const selectedMove = history.filter(hist => hist.isSelected === true);
+      const current = selectedMove.length > 0 ? selectedMove[0] : history[this.state.stepNumber];
       const winnerData = calculateWinner(current.squares);
   
       let status;
@@ -59,12 +73,10 @@ class Game extends React.Component {
       }
   
       const moves = history.map((step, move) => {
-        const desc = move ? 
-          `Go to move # (${this.state.positions[move-1].x} , ${this.state.positions[move-1].y})` :
-          'Go to game start';
+        const desc = `Go to move # (${history[move].position.x}, ${history[move].position.y})`
   
         return (
-            <li key={move} className={this.state.stepNumber === move ? 'active' : ''}>
+            <li key={move} className={this.state.history[move].isSelected ? 'active' : ''}>
                 <button onClick={()=>this.jumpTo(move)}>{desc}</button>
             </li>
         )
@@ -72,7 +84,7 @@ class Game extends React.Component {
   
       return (
         <div className="game">
-          <div className="game-board">
+          <div className="game-board">          
             <Board 
               squares={current.squares}
               onClick={(i) => this.handleClick(i)}
@@ -80,7 +92,8 @@ class Game extends React.Component {
             />
           </div>
           <div className="game-info">
-            <div>{ status }</div>
+            <div>{status}</div>
+            <button onClick={()=> this.sortMoves()}>Sort moves</button>
             <ol>{moves}</ol>
           </div>
         </div>
