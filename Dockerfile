@@ -1,4 +1,4 @@
-FROM node:13.12.0-alpine
+FROM alpine
 
 LABEL maintainter="sanyo16@gmail.com"
 
