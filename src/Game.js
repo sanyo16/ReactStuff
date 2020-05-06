@@ -20,6 +20,8 @@ class Game extends React.Component {
   
     handleClick(i) {
       const history = this.state.history.slice(0,  this.state.stepNumber + 1);
+      history.map(function(hist) { hist.isSelected = false; return hist});
+
       const current = history[history.length - 1];   
       const squares = current.squares.slice();
   
@@ -40,7 +42,7 @@ class Game extends React.Component {
   
     jumpTo(move) {
         const history = this.state.history.slice(0, this.state.history.length);
-        history.map(hist => hist.isSelected = false);
+        history.map(function(hist) { hist.isSelected = false; return hist});
         history[move].isSelected = true;
 
         this.setState({
